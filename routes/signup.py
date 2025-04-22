@@ -1,32 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from datetime import datetime
 
-auth_bp = Blueprint("auth", __name__, template_folder="../templates")
+signup_bp = Blueprint("signup", __name__, template_folder="../templates")
 
-# Home route - for the matches page
-@auth_bp.route("/home")
-def home():
-    # Placeholder for matches data (hardcoded for now)
-    matches = [
-        {"team1": "Team A", "team2": "Team B", "score": "1-0", "date": "2025-04-22"},
-        {"team1": "Team C", "team2": "Team D", "score": "2-2", "date": "2025-04-23"},
-        {"team1": "Team E", "team2": "Team F", "score": "0-3", "date": "2025-04-24"},
-    ]
-    
-    return render_template("home.html", matches=matches)
-
-@auth_bp.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        # Placeholder: handle login logic here
-        username = request.form.get("username")
-        password = request.form.get("password")
-        # For now, directly redirect to the homepage after login
-        return redirect(url_for("auth.home"))
-
-    return render_template("login.html")
-
-@auth_bp.route("/signup", methods=["GET", "POST"])
+@signup_bp.route("/signup", methods=["GET", "POST"])
 def signup():
     if request.method == "POST":
         name = request.form.get("name")
@@ -55,7 +32,7 @@ def signup():
                 flash("Account created successfully! Please log in.", "success")
 
             # Redirect to login page after successful registration
-            return redirect(url_for("auth.login"))
+            return redirect(url_for("login.login"))
 
         except ValueError:
             # Handle invalid birthdate format
@@ -63,10 +40,3 @@ def signup():
             return render_template("signup.html")
 
     return render_template("signup.html")
-
-
-@auth_bp.route("/logout")
-def logout():
-    # Handle logout (e.g., clear session, cookies)
-    flash("You have logged out successfully.", "success")
-    return redirect(url_for("auth.login"))
