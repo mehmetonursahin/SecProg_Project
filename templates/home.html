@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Homepage - Secure Football App</title>
+</head>
+<body>
+    <h2>Football Matches</h2>
+    <ul>
+        {% for match in matches %}
+        <li>
+            <strong>{{ match.team1 }}</strong> vs <strong>{{ match.team2 }}</strong><br>
+            Score: {{ match.score }}<br>
+            Date: {{ match.date }}
+        </li>
+        {% endfor %}
+    </ul>
+
+    <p><a href="{{ url_for('auth.logout') }}">Logout</a></p>
+</body>
+</html>
