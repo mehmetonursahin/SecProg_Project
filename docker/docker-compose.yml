@@ -1,0 +1,41 @@
+services:
+  backend:
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile.backend
+    env_file:
+      - ../backend/.env
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./../backend:/app
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - MYSQL_HOST=docker-database-1
+      - MYSQL_USER=matchscores_user
+      - MYSQL_PASSWORD=matchscores_password
+      - MYSQL_DB=matchscores
+    depends_on:
+      - database
+    expose:
+      - "8080"
+
+  database:
+    image: mysql:8.0
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=matchscores_user
+      - MYSQL_PASSWORD=matchscores_password
+      - MYSQL_DATABASE=matchscores
+    ports:
+      - "3307:3306"
+    expose:
+      - "3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./../sql/1-create_tables.sql:/docker-entrypoint-initdb.d/1-create_tables.sql
+      - ./../sql:/docker-entrypoint-initdb.d
+
+volumes:
+  mysql_data:

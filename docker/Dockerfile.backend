@@ -1,0 +1,20 @@
+# Dockerfile
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# Install system dependencies
+ENV PYTHONPATH "${PYTHONPATH}:/app"
+RUN apt-get update && apt-get install -y \
+    default-mysql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements first to leverage Docker cache
+COPY backend/requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+
+# Command to run the application in development mode
+CMD ["flask", "--debug","run", "--host=0.0.0.0", "--port=8080"]
