@@ -1,19 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Homepage - Secure Football App</title>
+    <title>Homepage - MatchScores</title>
 </head>
 <body>
     <h2>Football Matches</h2>
+
+    <form method="GET" action="{{ url_for('home.home') }}">
+        <input type="text" name="search" placeholder="Search by club name..." value="{{ search_query }}">
+        <button type="submit">Search</button>
+    </form>
+    
+    <br>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+          {% for category, message in messages %}
+            <li style="color: {% if category == 'error' %}red{% else %}green{% endif %};">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
     <ul>
         {% for match in matches %}
         <li>
-            <strong>{{ match.team1 }}</strong> vs <strong>{{ match.team2 }}</strong><br>
-            Score: {{ match.score }}<br>
-            Date: {{ match.date }}
+            <strong>{{ match.home_club_name }}</strong> vs <strong>{{ match.away_club_name }}</strong><br>
+            Score: {{ match.home_club_goals }} - {{ match.away_club_goals }}<br>
+            Date: {{ match.date }}<br>
+            Stadium: {{ match.stadium }}
+            {% if is_admin %}
+                <form method="POST" action="{{ url_for('delete_match.delete_match', match_id=match.game_id) }}">
+                    <button type="submit">Delete Match</button>
+                </form>
+            {% endif %}
         </li>
         {% endfor %}
     </ul>
+
+    {% if is_admin %}
+        <!-- Add Club Button for Admin Users -->
+        <p><a href="{{ url_for('home.add_club') }}">Add a New Club</a></p>
+        <p><a href="{{ url_for('add_match.add_match') }}">Add a New Match</a></p>
+    {% endif %}
 
     <p><a href="{{ url_for('logout.logout') }}">Logout</a></p>
 </body>

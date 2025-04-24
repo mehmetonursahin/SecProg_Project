@@ -4,6 +4,10 @@ from routes.home import home_bp
 from routes.login import login_bp
 from routes.signup import signup_bp
 from routes.logout import logout_bp
+from routes.forgot_password import forgot_password_bp
+from routes.reset_password import reset_password_bp
+from routes.add_match import add_match_bp
+from routes.delete_match import delete_match_bp
 
 from flask_cors import CORS
 
@@ -31,6 +35,10 @@ def create_app():
     app.register_blueprint(home_bp)
     app.register_blueprint(signup_bp)
     app.register_blueprint(logout_bp)
+    app.register_blueprint(forgot_password_bp)
+    app.register_blueprint(reset_password_bp)
+    app.register_blueprint(add_match_bp)
+    app.register_blueprint(delete_match_bp)
     
     return app
 

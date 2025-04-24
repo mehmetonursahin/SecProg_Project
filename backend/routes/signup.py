@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from datetime import datetime
+from password_utils import generate_salt, hash_password
 from db import get_db
 
 signup_bp = Blueprint("signup", __name__, template_folder="../templates")
@@ -16,6 +17,9 @@ def signup():
         password = request.form.get("password")
         birth_date_str = request.form.get("birthdate")
         is_admin = "is_admin" in request.form  # This checks if the checkbox was checked
+        
+        salt = generate_salt()
+        hashed_password = hash_password(password, salt)
 
         try:
             cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
@@ -42,8 +46,8 @@ def signup():
                 'name': name,
                 'surname': surname,
                 'birth_date': birth_date,
-                'password_hash': password,
-                'password_salt': "",
+                'password_hash': hashed_password,
+                'password_salt': salt,
                 'is_admin' : is_admin
             })
 

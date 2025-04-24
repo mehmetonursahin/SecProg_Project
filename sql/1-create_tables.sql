@@ -9,14 +9,14 @@ CREATE TABLE IF NOT EXISTS users (
     name VARCHAR(100) NOT NULL,
     surname VARCHAR(100) NOT NULL,
     birth_date DATE NOT NULL,
-    password_hash VARBINARY(255) NOT NULL,
-    password_salt VARBINARY(255) NOT NULL,
+    password_hash VARCHAR(64) NOT NULL,
+    password_salt VARCHAR(32) NOT NULL,
     is_admin BOOLEAN NOT NULL DEFAULT FALSE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Clubs table
 CREATE TABLE IF NOT EXISTS clubs (
-    club_id INTEGER PRIMARY KEY,
+    club_id VARCHAR(50) PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     stadium_name VARCHAR(255),
     stadium_seats INTEGER,
@@ -26,25 +26,15 @@ CREATE TABLE IF NOT EXISTS clubs (
 
 -- Games table
 CREATE TABLE IF NOT EXISTS games (
-    game_id INTEGER PRIMARY KEY,
-    season INTEGER NOT NULL,
+    game_id INTEGER PRIMARY KEY AUTO_INCREMENT,
     date DATETIME NOT NULL,
-    home_club_id INTEGER NOT NULL,
-    away_club_id INTEGER NOT NULL,
+    home_club_id VARCHAR(50) NOT NULL,
+    away_club_id VARCHAR(50) NOT NULL,
     home_club_goals INTEGER NOT NULL DEFAULT 0,
     away_club_goals INTEGER NOT NULL DEFAULT 0,
-    home_club_position INTEGER NOT NULL,
-    away_club_position INTEGER NOT NULL,
-    home_club_manager_name VARCHAR(100),
-    away_club_manager_name VARCHAR(100),
     stadium VARCHAR(100) NOT NULL,
     attendance INTEGER,
     referee VARCHAR(100) NOT NULL,
-    url VARCHAR(255) NOT NULL,
-    home_club_name VARCHAR(100),
-    away_club_name VARCHAR(100),
-    aggregate VARCHAR(10) NOT NULL,
-    competition_type VARCHAR(50) NOT NULL,
 
     FOREIGN KEY (home_club_id) REFERENCES clubs(club_id)
         ON DELETE CASCADE
@@ -52,6 +42,15 @@ CREATE TABLE IF NOT EXISTS games (
     FOREIGN KEY (away_club_id) REFERENCES clubs(club_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE password_resets (
+    reset_id INTEGER PRIMARY KEY AUTO_INCREMENT,
+    user_id INTEGER NOT NULL,
+    token VARCHAR(255) NOT NULL,
+    expires_at DATETIME NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
+        ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 SET FOREIGN_KEY_CHECKS = 1;

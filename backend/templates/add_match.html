@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Match</title>
+    <script>
+        function toggleStadiumInput() {
+            const option = document.querySelector('input[name="stadium_option"]:checked').value;
+            const stadiumInputDiv = document.getElementById("customStadiumDiv");
+
+            if (option === "custom") {
+                stadiumInputDiv.style.display = "block";
+            } else {
+                stadiumInputDiv.style.display = "none";
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>Add a New Match</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <ul>
+            {% for category, message in messages %}
+            <li style="color: {% if category == 'error' %}red{% else %}green{% endif %};">{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+
+    <form method="POST">
+        <label>Home Club ID:</label><br>
+        <input type="text" name="home_club_id" required><br><br>
+
+        <label>Away Club ID:</label><br>
+        <input type="text" name="away_club_id" required><br><br>
+
+        <label>Date:</label><br>
+        <input type="datetime-local" name="date" required><br><br>
+
+        <label>Home Team Score:</label><br>
+        <input type="number" name="score_home" required><br><br>
+
+        <label>Away Team Score:</label><br>
+        <input type="number" name="score_away" required><br><br>
+
+        <label>Stadium:</label><br>
+        <input type="radio" name="stadium_option" value="home_team" checked onclick="toggleStadiumInput()"> Use Home Team's Stadium<br>
+        <input type="radio" name="stadium_option" value="custom" onclick="toggleStadiumInput()"> Other Stadium<br><br>
+
+        <div id="customStadiumDiv" style="display: none;">
+            <label>Custom Stadium Name:</label><br>
+            <input type="text" name="custom_stadium"><br><br>
+        </div>
+
+        <label>Referee:</label><br>
+        <input type="text" name="referee" required><br><br>
+
+        <input type="submit" value="Add Match">
+    </form>
+
+    <p><a href="{{ url_for('home.home') }}">Back to Homepage</a></p>
+</body>
+</html>
