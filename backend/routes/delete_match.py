@@ -1,10 +1,13 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from db import get_db
 
 delete_match_bp = Blueprint("delete_match", __name__)
 
 @delete_match_bp.route("/delete_match/<int:match_id>", methods=["GET", "POST"])
 def delete_match(match_id):
+    if not session.get('is_admin'):
+        flash("You do not have permission to delete a match.", "error")
+        return redirect(url_for('home.home'))
     db = get_db()
     cursor = db.cursor(dictionary=True)
 

@@ -1,10 +1,14 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from db import get_db
 
 add_match_bp = Blueprint("add_match", __name__, template_folder="../templates")
 
 @add_match_bp.route("/add_match", methods=["GET", "POST"])
 def add_match():
+    if not session.get('is_admin'):
+        flash("You do not have permission to add a match.", "error")
+        return redirect(url_for('home.home'))
+    
     if request.method == "POST":
         # Get match details from the form
         home_club_id = request.form.get("home_club_id")
